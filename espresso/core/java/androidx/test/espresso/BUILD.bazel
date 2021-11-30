@@ -43,6 +43,7 @@ BASE_LAYER_INTERFACES = [
     "PerformException.java",
     "Root.java",
     "RootViewException.java",
+    "TruncatedException.java",
     "ViewFinder.java",
     "UiController.java",
 ]

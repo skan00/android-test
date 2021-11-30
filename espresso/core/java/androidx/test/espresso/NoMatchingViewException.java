@@ -38,7 +38,8 @@ import org.hamcrest.Matcher;
  * thread, it would be invalid to touch the view on the instrumentation thread. Also the view
  * hierarchy may have changed since exception creation (leading to more confusion).
  */
-public final class NoMatchingViewException extends RuntimeException implements RootViewException {
+public final class NoMatchingViewException extends RuntimeException
+    implements RootViewException, TruncatedException {
 
   private Matcher<? super View> viewMatcher;
   private View rootView;
@@ -87,12 +88,37 @@ public final class NoMatchingViewException extends RuntimeException implements R
       }
       errorMessage =
           HumanReadables.getViewHierarchyErrorMessage(
-              builder.rootView, null /* problemViews */, message, null /* problemViewSuffix */);
+              builder.rootView,
+              /* problemViews= */ null,
+              message,
+              /* problemViewSuffix= */ null,
+              builder.maxMsgLen);
     } else {
       errorMessage =
           String.format(Locale.ROOT, "Could not find a view that matches %s", builder.viewMatcher);
     }
-    return errorMessage;
+
+    String fileMessage =
+        builder.artifactFilename.isPresent()
+            ? String.format(
+                "\nThe complete view hierarchy is available in artifact file '%s'.",
+                builder.artifactFilename.get())
+            : "";
+
+    return errorMessage + fileMessage;
+  }
+
+  @Override
+  public Throwable withTruncatedMessage(int maxMsgLen, EspressoOptional<String> artifactFilename) {
+    String msg = getMessage();
+    if (msg != null && msg.length() < maxMsgLen && !artifactFilename.isPresent()) {
+      return this;
+    }
+    return new Builder()
+        .from(this)
+        .withMaxMsgLen(maxMsgLen)
+        .withArtifactFilename(artifactFilename)
+        .build();
   }
 
   /** Builder for {@link NoMatchingViewException}. */
@@ -104,6 +130,8 @@ public final class NoMatchingViewException extends RuntimeException implements R
     private boolean includeViewHierarchy = true;
     private EspressoOptional<String> adapterViewWarning = EspressoOptional.<String>absent();
     private Throwable cause;
+    private int maxMsgLen = Integer.MAX_VALUE;
+    private EspressoOptional<String> artifactFilename = EspressoOptional.absent();
 
     public Builder from(NoMatchingViewException exception) {
       this.viewMatcher = exception.viewMatcher;
@@ -141,6 +169,16 @@ public final class NoMatchingViewException extends RuntimeException implements R
 
     public Builder withCause(Throwable cause) {
       this.cause = cause;
+      return this;
+    }
+
+    public Builder withMaxMsgLen(int maxMsgLen) {
+      this.maxMsgLen = maxMsgLen;
+      return this;
+    }
+
+    public Builder withArtifactFilename(EspressoOptional<String> artifactFilename) {
+      this.artifactFilename = artifactFilename;
       return this;
     }
 

@@ -1,8 +1,9 @@
 // Signature format: 3.0
 package androidx.test.espresso {
 
-  public final class AmbiguousViewMatcherException extends java.lang.RuntimeException implements androidx.test.espresso.RootViewException {
+  public final class AmbiguousViewMatcherException extends java.lang.RuntimeException implements androidx.test.espresso.RootViewException androidx.test.espresso.TruncatedException {
     method public android.view.View! getRootView();
+    method public Throwable! withTruncatedMessage(int, androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
   }
 
   public static class AmbiguousViewMatcherException.Builder {
@@ -10,6 +11,8 @@ package androidx.test.espresso {
     method public androidx.test.espresso.AmbiguousViewMatcherException! build();
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! from(androidx.test.espresso.AmbiguousViewMatcherException!);
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! includeViewHierarchy(boolean);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withArtifactFilename(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withMaxMsgLen(int);
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withOtherAmbiguousViews(android.view.View!...);
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withRootView(android.view.View!);
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withView1(android.view.View!);
@@ -101,9 +104,10 @@ package androidx.test.espresso {
     method public static androidx.test.espresso.NoMatchingRootException! create(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, java.util.List<androidx.test.espresso.Root!>!);
   }
 
-  public final class NoMatchingViewException extends java.lang.RuntimeException implements androidx.test.espresso.RootViewException {
+  public final class NoMatchingViewException extends java.lang.RuntimeException implements androidx.test.espresso.RootViewException androidx.test.espresso.TruncatedException {
     method public android.view.View! getRootView();
     method public String! getViewMatcherDescription();
+    method public Throwable! withTruncatedMessage(int, androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
   }
 
   public static class NoMatchingViewException.Builder {
@@ -113,7 +117,9 @@ package androidx.test.espresso {
     method public androidx.test.espresso.NoMatchingViewException.Builder! includeViewHierarchy(boolean);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withAdapterViewWarning(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withAdapterViews(java.util.List<android.view.View!>!);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withArtifactFilename(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withCause(Throwable!);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withMaxMsgLen(int);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withRootView(android.view.View!);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withViewMatcher(org.hamcrest.Matcher<? super android.view.View>!);
   }
@@ -147,6 +153,10 @@ package androidx.test.espresso {
 
   public interface RootViewException extends androidx.test.espresso.EspressoException {
     method public android.view.View! getRootView();
+  }
+
+  public interface TruncatedException {
+    method public Throwable! withTruncatedMessage(int, androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
   }
 
   public interface UiController {
@@ -907,6 +917,7 @@ package androidx.test.espresso.util {
     method public static String! describe(android.database.Cursor!);
     method public static String! describe(android.view.View!);
     method public static String! getViewHierarchyErrorMessage(android.view.View!, java.util.List<android.view.View!>!, String!, String!);
+    method public static String! getViewHierarchyErrorMessage(android.view.View!, java.util.List<android.view.View!>!, String!, String!, int);
   }
 
   public final class TreeIterables {
