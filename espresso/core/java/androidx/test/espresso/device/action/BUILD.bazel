@@ -14,5 +14,6 @@ kt_android_library(
     deps = [
         "//espresso/core/java/androidx/test/espresso/device/context",
         "//espresso/core/java/androidx/test/espresso/device/controller",
+        "//runner/monitor",
     ],
 )
